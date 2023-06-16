@@ -22,7 +22,7 @@ import (
 const (
 	Lenth                             int64 = 100 * 1024 //每次传输大小（200kb）
 	ErrNum                            int   = 5          //传输失败重试次数 5次
-	Second                            int64 = 10         //传输速度统计时间间隔 10秒
+	Second                            int64 = 1          //传输速度统计时间间隔 1秒
 	recfilepath                             = "files"
 	Transferlog_push_task_db_key            = "transfer_push_task_db_key"
 	Transferlog_pull_task_db_key            = "transfer_pull_task_db_key"
