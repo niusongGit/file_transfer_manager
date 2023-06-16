@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"file_transfer_manager/config"
 	"file_transfer_manager/connTcpMessage"
 	"file_transfer_manager/pkg/db"
@@ -14,15 +13,15 @@ import (
 
 func main() {
 	config.Step()
+	//日志
 	log.Step(config.LogPath)
 	defer log.Sync()
-
+	//本地数据库
+	db.InitDB("cache_data")
+	//tcp消息服务
 	tcpMsg := connTcpMessage.NewConnTcp(config.TcpIP, config.TcpPort)
 	go tcpMsg.StartUP()
-	RegisterMsgManger(tcpMsg.Router)
-
-	db.InitDB("cache_data")
-
+	//文件传输管理器
 	transferManger := transfer_manager.NewTransferManger(tcpMsg, 1, 2, 3)
 	transferManger.Load()
 
@@ -33,6 +32,7 @@ func main() {
 	r.Run(fmt.Sprintf(":%d", config.WebPort))
 }
 
+// 所有api
 func httpHander(r *gin.Engine, transferManger *transfer_manager.TransferManger) *gin.Engine {
 
 	group := r.Group("/v1")
@@ -300,15 +300,4 @@ func httpHander(r *gin.Engine, transferManger *transfer_manager.TransferManger) 
 	})
 
 	return r
-}
-
-func RegisterMsgManger(r *connTcpMessage.Router) {
-	//回复消息ID为0
-	r.AddRouter(1, RecvNewPushTask)
-	//r.AddRouter(2, RecvNewPushTask_rev)
-}
-
-func RecvNewPushTask(ctx context.Context, message *connTcpMessage.Message) ([]byte, error) {
-	fmt.Println("收到消息：mid:", message.MID, " Data:", string(message.Data))
-	return message.Data, nil
 }
