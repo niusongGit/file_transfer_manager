@@ -222,17 +222,17 @@ NewPushTask
 @param to
 @return error
 */
-func (this *TransferManger) NewPushTask(path, to string) (*TransferMsg, error) {
+func (this *TransferManger) NewPushTask(path, to string) (*PushTask, error) {
 	this.PushTask = &PushTask{
 		To:             to,
 		Path:           path,
 		ExpirationTime: time.Now().Unix() + int64(Transfer_task_expiration_interval.Seconds()),
 	}
-	tm, err := this.PushTask.CreatePushTask()
+	_, err := this.PushTask.CreatePushTask()
 	if err != nil {
 		return nil, err
 	}
-	return tm, nil
+	return this.PushTask, nil
 }
 
 /*

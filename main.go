@@ -182,8 +182,7 @@ func httpHander(r *gin.Engine, transferManger *transfer_manager.TransferManger) 
 		}
 		path, ok := req["path"]
 		if !ok {
-			c.JSON(http.StatusOK, gin.H{"code": 999, "data": nil, "msg": "path 不能为空"})
-			return
+			path = ""
 		}
 		from, ok := req["from_addr"]
 		if !ok {
@@ -267,8 +266,7 @@ func httpHander(r *gin.Engine, transferManger *transfer_manager.TransferManger) 
 		}
 		path, ok := req["path"]
 		if !ok {
-			c.JSON(http.StatusOK, gin.H{"code": 999, "data": nil, "msg": "path 不能为空"})
-			return
+			path = ""
 		}
 		err := transferManger.PullTaskStart(uint64(id.(float64)), path.(string))
 		if err != nil {

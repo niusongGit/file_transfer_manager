@@ -65,7 +65,11 @@ func (c *ConnTcp) handFunc(conn net.Conn) {
 		fun := c.Router.GetRouter(recv.MID)
 		send, err := fun(context.Background(), recv)
 		//回复
-		err = c.sendPackage(conn, 0, send, err.Error())
+		var errNote string
+		if err != nil {
+			errNote = err.Error()
+		}
+		err = c.sendPackage(conn, 0, send, errNote)
 		if err != nil {
 			log.Println(err)
 			break
